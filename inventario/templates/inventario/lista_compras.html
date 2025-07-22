@@ -1,0 +1,83 @@
+{# inventario/templates/inventario/lista_compras.html #}
+
+{# Heredamos la plantilla base del proyecto para mantener la estructura común (cabecera, estilos, etc.) #}
+{% extends 'inventario/base.html' %}
+
+{# Definimos el título de la pestaña del navegador. Este bloque debe estar correctamente estructurado en base.html #}
+{% block title %}Lista de Compras{% endblock %}
+
+{# Inicio del bloque de contenido principal que se insertará en base.html #}
+{% block content %}
+<h1>Lista de Compras</h1>
+
+{# Si existen compras en el contexto, mostramos la tabla #}
+{% if compras %}
+<table class="table table-striped table-hover">
+  <thead class="table-primary">
+    <tr>
+      <th>ID</th>
+      <th>Fecha</th>
+      <th>Total</th>
+      <th>Proveedor</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {# Iteramos sobre cada compra registrada #}
+    {% for compra in compras %}
+    <tr>
+      <td>{{ compra.id }}</td>
+      <td>{{ compra.fecha|date:"d/m/Y" }}</td> {# Formateamos la fecha al estilo día/mes/año #}
+      <td>{{ compra.total|floatformat:2 }} €</td> {# Mostramos el total con 2 decimales #}
+      <td>{{ compra.proveedor.nombre }}</td> {# Mostramos el nombre del proveedor relacionado #}
+      <td>
+        {# Botón para editar la compra actual #}
+        <a href="{% url 'editar_compra' compra.id %}" class="btn btn-sm btn-warning">Editar</a>
+        {# Botón para eliminar la compra actual #}
+        <a href="{% url 'eliminar_compra' compra.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+      </td>
+    </tr>
+
+    {# Segunda fila: muestra los detalles (productos) de esta compra #}
+    <tr>
+      <td colspan="5">
+        <table class="table table-sm table-bordered mt-2">
+          <thead class="table-secondary">
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {# Iteramos sobre los detalles de la compra (productos comprados) #}
+            {% for detalle in compra.detalles.all %}
+            <tr>
+              <td>{{ detalle.producto.nombre }}</td>
+              <td>{{ detalle.cantidad }}</td>
+              <td>{{ detalle.precio_unitario|floatformat:2 }} €</td>
+              <td>{{ detalle.subtotal|floatformat:2 }} €</td>
+            </tr>
+            {# Si no hay detalles registrados para esta compra #}
+            {% empty %}
+            <tr>
+              <td colspan="4">No hay detalles para esta compra.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+{# Si no hay compras, mostramos un mensaje informativo #}
+<p>No hay compras registradas.</p>
+{% endif %}
+
+{# Botón para crear una nueva compra #}
+<a href="{% url 'crear_compra' %}" class="btn btn-success mt-3">Crear nueva compra</a>
+{% endblock %}

@@ -1,0 +1,68 @@
+{# Heredamos la estructura base del sitio: cabecera, scripts, etc. #}
+{% extends 'inventario/base.html' %}
+
+{# Inicio del bloque de contenido personalizado de esta vista #}
+{% block content %}
+
+  {# Título dinámico según si estamos editando o creando una venta #}
+  <h2>{% if form.instance.pk %}Editar Venta{% else %}Registrar Venta{% endif %}</h2>
+
+  {# Formulario principal de la venta, que se enviará por POST #}
+  <form method="post">
+    {# Token de seguridad obligatorio en formularios POST (contra CSRF) #}
+    {% csrf_token %}
+
+    {# Campo para seleccionar el cliente asociado a la venta #}
+    <div class="mb-3">
+      <label><strong>Cliente:</strong></label>
+      {{ form.cliente }}
+    </div>
+
+    <h4>Productos</h4>
+
+    {# Campo oculto necesario para manejar correctamente el formset (gestión interna) #}
+    {{ formset.management_form }}
+
+    {# Tabla con los formularios anidados del formset para los productos vendidos #}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio Unitario</th>
+          <th>Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {# Iteramos sobre cada formulario del formset (cada detalle de producto) #}
+        {% for detalle in formset %}
+          <tr>
+            {# Campo para seleccionar el producto vendido #}
+            <td>{{ detalle.producto }}</td>
+
+            {# Campo para introducir la cantidad vendida #}
+            <td>{{ detalle.cantidad }}</td>
+
+            {# Campo para ingresar el precio unitario al que se vendió #}
+            <td>{{ detalle.precio_unitario }}</td>
+
+            <td>
+              {# Si el detalle ya existe (instancia con PK), mostramos el checkbox de eliminar #}
+              {% if detalle.instance.pk %}
+                {{ detalle.DELETE }}
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {# Botón para guardar o actualizar la venta, según el modo (crear o editar) #}
+    <button type="submit" class="btn btn-success">
+      {% if form.instance.pk %}Actualizar Venta{% else %}Guardar Venta{% endif %}
+    </button>
+
+    {# Enlace para cancelar y volver a la lista de ventas sin guardar cambios #}
+    <a href="{% url 'lista_ventas' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

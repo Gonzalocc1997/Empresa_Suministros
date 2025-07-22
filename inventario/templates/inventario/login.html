@@ -1,0 +1,46 @@
+{% extends 'inventario/base.html' %}
+{# Heredamos la plantilla base del proyecto para mantener el diseño general: navbar, estilos, etc. #}
+
+{% block title %}Iniciar Sesión{% endblock %}
+{# Personalizamos el título que se mostrará en la pestaña del navegador #}
+
+{% block content %}
+{# Inicio del contenido específico para esta página de login #}
+
+<div class="row justify-content-center">
+  <div class="col-md-4">
+    <h2>Iniciar Sesión</h2>
+
+    <form method="post">
+      {% csrf_token %}
+      {# Incluimos el token CSRF obligatorio para proteger el formulario POST #}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+        {# Mostramos errores generales (por ejemplo, credenciales inválidas) #}
+      {% endif %}
+
+      <div class="mb-3">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {{ form.username.errors }}
+        {# Campo de nombre de usuario con su etiqueta y errores (si los hay) #}
+      </div>
+
+      <div class="mb-3">
+        {{ form.password.label_tag }}
+        {{ form.password }}
+        {{ form.password.errors }}
+        {# Campo de contraseña con su etiqueta y errores (si los hay) #}
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Entrar</button>
+      {# Botón para enviar el formulario y hacer login #}
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+{# Fin del bloque de contenido personalizado para esta plantilla #}

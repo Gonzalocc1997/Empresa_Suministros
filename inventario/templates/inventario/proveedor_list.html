@@ -1,0 +1,61 @@
+{# inventario/templates/inventario/proveedor_list.html #}
+
+{% extends 'inventario/base.html' %}
+
+{# Título que aparece en la pestaña del navegador #}
+{% block title %}Lista de Proveedores{% endblock %}
+
+{% block content %}
+  <h1>Lista de Proveedores</h1>
+
+  {# Enlace para registrar un nuevo proveedor #}
+  <a href="{% url 'proveedor-create' %}" class="btn btn-success mb-3">
+    Registrar nuevo proveedor
+  </a>
+
+  {# Si existen proveedores en la base de datos, mostrar la tabla #}
+  {% if proveedores %}
+    <table class="table table-striped table-hover">
+      <thead class="table-primary">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {# Iteramos sobre cada proveedor #}
+        {% for proveedor in proveedores %}
+          <tr>
+            <td>{{ proveedor.id }}</td>
+            <td>{{ proveedor.nombre }}</td>
+            <td>{{ proveedor.email }}</td>
+            <td>{{ proveedor.telefono }}</td>
+            <td>
+              {# Botón para editar el proveedor #}
+              <a
+                href="{% url 'proveedor-update' proveedor.id %}"
+                class="btn btn-sm btn-warning"
+              >
+                Editar
+              </a>
+              {# Botón para eliminar el proveedor #}
+              <a
+                href="{% url 'proveedor-delete' proveedor.id %}"
+                class="btn btn-sm btn-danger"
+              >
+                Eliminar
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    {# Mensaje cuando no hay proveedores registrados #}
+    <p>No hay proveedores registrados.</p>
+  {% endif %}
+
+{% endblock %}

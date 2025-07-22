@@ -1,0 +1,63 @@
+{# inventario/templates/inventario/producto_list.html #}
+
+{% extends 'inventario/base.html' %}
+
+{# Título que aparece en la pestaña del navegador #}
+{% block title %}Listado de Productos{% endblock %}
+
+{% block content %}
+  <h1>Listado de Productos</h1>
+
+  {# Enlace para crear un nuevo producto #}
+  <a href="{% url 'producto-create' %}" class="btn btn-success mb-3">
+    Registrar nuevo producto
+  </a>
+
+  {# Si existen productos en la base de datos, se muestra la tabla #}
+  {% if productos %}
+    <table class="table table-striped table-hover">
+      <thead class="table-primary">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {# Iteramos sobre la lista de productos #}
+        {% for producto in productos %}
+          <tr>
+            <td>{{ producto.id }}</td>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.descripcion }}</td>
+            <td>{{ producto.precio|floatformat:2 }} €</td>
+            <td>{{ producto.stock }}</td>
+            <td>
+              {# Botón para editar producto #}
+              <a
+                href="{% url 'producto-update' producto.id %}"
+                class="btn btn-sm btn-warning"
+              >
+                Editar
+              </a>
+              {# Botón para eliminar producto #}
+              <a
+                href="{% url 'producto-delete' producto.id %}"
+                class="btn btn-sm btn-danger"
+              >
+                Eliminar
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    {# Mensaje cuando no hay productos registrados #}
+    <p>No hay productos disponibles.</p>
+  {% endif %}
+
+{% endblock %}

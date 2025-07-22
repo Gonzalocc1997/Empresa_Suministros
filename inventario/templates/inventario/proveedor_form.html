@@ -1,0 +1,27 @@
+{% extends 'inventario/base.html' %}
+{# Heredamos la plantilla base para mantener la estructura general del sitio (navbar, estilos, etc.) #}
+
+{% block content %}
+{# Inicio del bloque de contenido específico de esta página #}
+
+  <h2>{% if form.instance.pk %}Editar Proveedor{% else %}Registrar Proveedor{% endif %}</h2>
+  {# Título dinámico: si el formulario tiene una instancia con ID (pk), estamos editando; si no, creando #}
+
+  <form method="post">
+    {% csrf_token %}
+    {# Token de seguridad obligatorio en formularios POST (protección CSRF) #}
+
+    {{ form.as_p }}
+    {# Renderizamos automáticamente todos los campos del formulario como párrafos (<p>) #}
+
+    <button type="submit" class="btn btn-primary">
+      {% if form.instance.pk %}Actualizar{% else %}Guardar{% endif %}
+      {# Texto del botón cambia según si estamos creando o editando #}
+    </button>
+
+    <a href="{% url 'proveedor-list' %}" class="btn btn-secondary">Cancelar</a>
+    {# Botón para cancelar y volver a la lista de proveedores sin guardar cambios #}
+  </form>
+
+{% endblock %}
+{# Fin del bloque de contenido #}

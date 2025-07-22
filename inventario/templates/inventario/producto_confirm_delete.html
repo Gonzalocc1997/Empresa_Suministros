@@ -1,0 +1,23 @@
+{# inventario/templates/inventario/producto_confirm_delete.html #}
+
+{% extends 'inventario/base.html' %}
+
+{# Título de la pestaña del navegador #}
+{% block title %}Confirmar Eliminación{% endblock %}
+
+{% block content %}
+<h1>¿Estás seguro de que deseas eliminar este producto?</h1>
+
+<!-- Información del producto que se eliminará -->
+<p><strong>Nombre:</strong> {{ object.nombre }}</p>
+<p><strong>Descripción:</strong> {{ object.descripcion }}</p>
+<p><strong>Precio:</strong> {{ object.precio }} €</p>
+<p><strong>Stock:</strong> {{ object.stock }}</p>
+
+<!-- Formulario de confirmación -->
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Eliminar</button>
+  <a href="{% url 'producto-list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

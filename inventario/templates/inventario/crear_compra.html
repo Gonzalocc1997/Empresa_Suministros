@@ -1,0 +1,64 @@
+{# Esta plantilla extiende de la base principal del sistema #}
+{% extends 'inventario/base.html' %}
+
+{# Bloque que se insertará dentro del bloque 'content' definido en base.html #}
+{% block content %}
+  <h2>Registrar Compra</h2>
+
+  {# Formulario que enviará los datos al backend por método POST #}
+  <form method="post">
+    {# Token de seguridad obligatorio en formularios POST para evitar ataques CSRF #}
+    {% csrf_token %}
+
+    {# Campo para seleccionar el proveedor de la compra #}
+    <div class="mb-3">
+      <label><strong>Proveedor:</strong></label>
+      {{ form.proveedor }}
+    </div>
+
+    <h4>Productos</h4>
+
+    {# Este formulario oculto es necesario para manejar el formset en Django #}
+    {{ formset.management_form }}
+
+    {# Tabla que muestra los formularios anidados del formset para productos #}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio Unitario</th>
+          <th>Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {# Iteramos sobre cada formulario de detalle de producto #}
+        {% for form_detalle in formset %}
+          <tr>
+            {# Campo para seleccionar el producto #}
+            <td>{{ form_detalle.producto }}</td>
+
+            {# Campo para ingresar la cantidad comprada #}
+            <td>{{ form_detalle.cantidad }}</td>
+
+            {# Campo para el precio unitario del producto en esta compra #}
+            <td>{{ form_detalle.precio_unitario }}</td>
+
+            <td>
+              {# Si el formulario representa una instancia existente, mostramos el checkbox para eliminar #}
+              {% if form_detalle.instance.pk %}
+                {{ form_detalle.DELETE }}
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {# Botón para enviar el formulario y registrar la compra #}
+    <button type="submit" class="btn btn-success">Guardar Compra</button>
+
+    {# Enlace para cancelar y volver a la lista de compras #}
+    <a href="{% url 'lista_compras' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

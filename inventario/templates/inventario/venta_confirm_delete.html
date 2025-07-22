@@ -1,0 +1,59 @@
+{% extends 'inventario/base.html' %}
+{# Heredamos la plantilla base para mantener la estructura visual general del sitio (estilos, navbar, etc.) #}
+
+{% block content %}
+{# Comienzo del bloque de contenido específico de esta página #}
+
+  <h1>Confirmar Eliminación de Venta</h1>
+  {# Título que indica al usuario que está a punto de eliminar una venta #}
+
+  <p><strong>ID:</strong> {{ object.id }}</p>
+  {# Mostramos el ID único de la venta que se va a eliminar #}
+
+  <p><strong>Cliente:</strong> {{ object.cliente.nombre }}</p>
+  {# Mostramos el nombre del cliente asociado a esta venta #}
+
+  <p><strong>Fecha:</strong> {{ object.fecha|date:"d/m/Y" }}</p>
+  {# Mostramos la fecha de la venta en formato día/mes/año #}
+
+  <p><strong>Total:</strong> {{ object.total|floatformat:2 }} €</p>
+  {# Mostramos el total de la venta con 2 decimales y símbolo de euro #}
+
+  <h5>Detalles de la venta:</h5>
+  {# Título para la tabla de productos vendidos en esta venta #}
+
+  <table class="table table-sm table-bordered">
+    <thead class="table-secondary">
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for detalle in object.detalles.all %}
+      {# Recorremos cada detalle de producto asociado a esta venta #}
+        <tr>
+          <td>{{ detalle.producto.nombre }}</td>
+          <td>{{ detalle.cantidad }}</td>
+          <td>{{ detalle.precio_unitario|floatformat:2 }}</td>
+          <td>{{ detalle.subtotal|floatformat:2 }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <form method="post">
+    {% csrf_token %}
+    {# Token obligatorio para proteger el formulario de eliminación (método POST) #}
+
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    {# Botón que ejecuta la eliminación de la venta #}
+
+    <a href="{% url 'lista_ventas' %}" class="btn btn-secondary">Cancelar</a>
+    {# Enlace para cancelar y volver a la lista de ventas sin eliminar #}
+  </form>
+
+{% endblock %}
+{# Fin del bloque de contenido #}

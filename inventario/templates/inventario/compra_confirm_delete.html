@@ -1,0 +1,45 @@
+{# inventario/templates/inventario/compra_confirm_delete.html #}
+
+{% extends 'inventario/base.html' %}
+
+{% block title %}Confirmar Eliminación de Compra{% endblock %}
+
+{% block content %}
+<h1>¿Estás seguro de que deseas eliminar esta compra?</h1>
+
+<!-- Información de la compra -->
+<p><strong>ID:</strong> {{ object.id }}</p>
+<p><strong>Proveedor:</strong> {{ object.proveedor.nombre }}</p>
+<p><strong>Fecha:</strong> {{ object.fecha|date:"d/m/Y" }}</p>
+<p><strong>Total:</strong> {{ object.total|floatformat:2 }} €</p>
+
+<!-- Tabla con los productos que se eliminarán junto con la compra -->
+<h5>Detalles de la compra:</h5>
+<table class="table table-sm table-bordered">
+  <thead class="table-secondary">
+    <tr>
+      <th>Producto</th>
+      <th>Cantidad</th>
+      <th>Precio Unitario</th>
+      <th>Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for detalle in object.detalles.all %}
+    <tr>
+      <td>{{ detalle.producto.nombre }}</td>
+      <td>{{ detalle.cantidad }}</td>
+      <td>{{ detalle.precio_unitario|floatformat:2 }}</td>
+      <td>{{ detalle.subtotal|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Formulario de confirmación -->
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Eliminar</button>
+  <a href="{% url 'lista_compras' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

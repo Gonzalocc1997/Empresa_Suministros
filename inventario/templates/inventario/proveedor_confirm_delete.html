@@ -1,0 +1,21 @@
+{# inventario/templates/inventario/proveedor_confirm_delete.html #}
+
+{% extends 'inventario/base.html' %}
+
+{% block title %}Confirmar Eliminación{% endblock %}
+
+{% block content %}
+<h1>¿Estás seguro de que deseas eliminar este proveedor?</h1>
+
+<!-- Mostrar los datos del proveedor a eliminar -->
+<p><strong>Nombre:</strong> {{ object.nombre }}</p>
+<p><strong>Email:</strong> {{ object.email }}</p>
+<p><strong>Teléfono:</strong> {{ object.telefono }}</p>
+
+<!-- Formulario de confirmación -->
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Eliminar</button>
+  <a href="{% url 'proveedor-list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
