@@ -1,0 +1,30 @@
+# Entorno virtual
+.venv/
+env/
+
+# Base de datos local
+db.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Migraciones: solo ignorar caché, no los .py
+*/migrations/__pycache__/
+
+# Node.js
+node_modules/
+frontend/node_modules/
+npm-debug.log
+yarn-error.log
+
+# Sistema / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Estáticos recolectados
+staticfiles/
